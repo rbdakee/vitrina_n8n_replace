@@ -4,6 +4,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 
 from ..config import settings
+from ..telegram_session import build_session
 from .api import VitrinaClient
 from .handlers import build_router
 from .parser import QueryParser
@@ -14,6 +15,7 @@ logger = logging.getLogger("ivitrina")
 async def run() -> None:
     bot = Bot(
         token=settings.sd_ivitrina_bot_token,
+        session=build_session(settings.telegram_proxy),
         default=DefaultBotProperties(parse_mode="HTML"),
     )
     parser = QueryParser(api_key=settings.openai_api_key, model=settings.openai_model)

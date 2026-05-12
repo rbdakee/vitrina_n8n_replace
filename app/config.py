@@ -16,5 +16,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     log_dir: str = "/app/logs"
 
+    telegram_proxy: str = ""
+
 
 settings = Settings()
