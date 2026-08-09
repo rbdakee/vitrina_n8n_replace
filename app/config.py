@@ -9,9 +9,10 @@ class Settings(BaseSettings):
     openai_model: str = "gpt-4.1-mini"
     vitrina_api_base: str = "https://vitrina-api.jurta.kz"
 
-    vitrina_ai_bot_token: str
+    # Analytics bot is optional: leave the token empty to keep it disabled.
+    vitrina_ai_bot_token: str = ""
     dify_api_base: str = "https://api.dify.ai/v1"
-    dify_bearer_token: str
+    dify_bearer_token: str = ""
 
     log_level: str = "INFO"
     log_dir: str = "/app/logs"

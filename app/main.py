@@ -11,7 +11,13 @@ from .logging_config import setup_logging
 async def _amain() -> None:
     setup_logging(settings.log_dir, settings.log_level)
     log = logging.getLogger("app")
-    log.info("Starting bots: ivitrina + analytics")
+
+    analytics_enabled = bool(settings.vitrina_ai_bot_token)
+    log.info(
+        "Starting bots: ivitrina%s", " + analytics" if analytics_enabled else ""
+    )
+    if not analytics_enabled:
+        log.warning("VITRINA_AI_BOT_TOKEN is not set, analytics bot is disabled")
 
     loop = asyncio.get_running_loop()
     stop = loop.create_future()
@@ -28,10 +34,9 @@ async def _amain() -> None:
             # Windows: signal handlers via add_signal_handler aren't supported.
             signal.signal(sig, lambda s, _f: _shutdown(s))
 
-    tasks = [
-        asyncio.create_task(run_ivitrina(), name="ivitrina"),
-        asyncio.create_task(run_analytics(), name="analytics"),
-    ]
+    tasks = [asyncio.create_task(run_ivitrina(), name="ivitrina")]
+    if analytics_enabled:
+        tasks.append(asyncio.create_task(run_analytics(), name="analytics"))
 
     await asyncio.wait(
         [*tasks, stop],
